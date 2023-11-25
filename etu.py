@@ -21,20 +21,36 @@ class Relay:
         def close(self):
                 gpio.output(self.pin, gpio.LOW)
 
+class Clock:
 
-
-def main(args):
         r0 = Relay(0)
         r1 = Relay(1)
+        lastPolarityPositive = False
 
+        def __init__(self) -> None:
+                self.r0.close()
+                self.r1.close()
 
+        def advance(self):
+                if self.lastPolarityPositive:
+                        self.r0.open()
+                        self.r1.close()
+                else:
+                        self.r0.close()
+                        self.r1.open()
+
+                self.lastPolarityPositive = not self.lastPolarityPositive
+
+                #40ms dwell
+                time.sleep(0.2)
+                self.r0.close()
+                self.r1.close()
+
+def main(args):
+        clock = Clock()
         while True:
-                r0.open()
-                r1.close()
-                time.sleep(0.001)
-                r0.close()
-                r1.open()
-                time.sleep(0.001)
+                clock.advance()
+                
 
 
 if __name__ == '__main__':
