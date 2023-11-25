@@ -1,0 +1,32 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Copy and Run",
+            "dependsOn": [
+                "SSH Copy",
+                "SSH Run"
+            ],
+            "dependsOrder": "sequence",
+            "problemMatcher": []
+        },
+        {
+            "label": "SSH Copy",
+            "type": "shell",
+            "command": "scp ./etu.py kenneth@etu:~/etu/",
+            "problemMatcher": []
+        },
+        {
+            "label": "SSH Run",
+            "type": "shell",
+            "command": "ssh",
+            "args": [
+                "kenneth@etu",
+                "killall python ; python ./etu/etu.py"
+            ],
+            "problemMatcher": []
+        }
+    ]
+}
