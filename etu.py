@@ -2,6 +2,7 @@
 
 import sys
 import time
+import datetime
 import RPi.GPIO as gpio
 
 gpio.setmode(gpio.BOARD)
@@ -21,7 +22,7 @@ class Relay:
         def close(self):
                 gpio.output(self.pin, gpio.LOW)
 
-class Clock:
+class ClockHands:
 
         r0 = Relay(0)
         r1 = Relay(1)
@@ -46,10 +47,66 @@ class Clock:
                 self.r0.close()
                 self.r1.close()
 
+
+class FaceTime:
+        handPos = 0
+
+        def __init__(self, minsPast12 : int):
+                handPos = minsPast12
+
+        def fromTime(set : datetime.time):
+                pos = (set.hour % 12) * 60 + set.minute
+                return FaceTime(pos)
+
+        def advance(self):
+                self.handPos = self.handPos + 1
+                self.handPos = self.handPos % 720
+
+        def getMinsPast12(self):
+                return self.handPos
+        
+        
+class Clock:
+        handPos = FaceTime()
+        handDriver = ClockHands()
+
+        def __init__(self):
+                self.loadHandTime()
+                pass
+
+        def save(self):
+                """Saves in the format: minutes past 12:00 (0-719)"""
+                with open("time.txt", "wt") as fp:
+                        fp.write(str(self.handPos.getMinsPast12()))
+
+        def load(self):
+                try:
+                        with open("time.txt", "rt") as fp:
+                                self.handPos = FaceTime(int(fp.read()))
+                except:
+                        self.handPos = FaceTime(0)
+
+        def moveOrWait(self, target: datetime.time):
+                targetPos = FaceTime.fromTime(target)
+                # Wait - if the target time is less than 70 minutes away.
+
+        def moveForwardTo(self, target: datetime.time):
+                targetFaceTime = FaceTime.fromTime(target)
+                while targetFaceTime != self.handPos:
+                        self.advanceHands()
+
+        def advanceHands(self):
+                self.handPos.advance()
+                self.handDriver.advance()
+                self.save()
+
 def main(args):
         clock = Clock()
-        while True:
-                clock.advance()
+        
+        hands = ClockHands()
+
+        for i in range(0,100):
+                hands.advance()
                 
 
 
