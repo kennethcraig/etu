@@ -4,6 +4,7 @@ import sys
 import time
 import datetime
 import RPi.GPIO as gpio
+from facetime import FaceTime
 
 gpio.setmode(gpio.BOARD)
 gpio.setwarnings(False)
@@ -48,24 +49,6 @@ class ClockHands:
                 self.r1.close()
 
 
-class FaceTime:
-        handPos = 0
-
-        def __init__(self, minsPast12 : int):
-                handPos = minsPast12
-
-        def fromTime(set : datetime.time):
-                pos = (set.hour % 12) * 60 + set.minute
-                return FaceTime(pos)
-
-        def advance(self):
-                self.handPos = self.handPos + 1
-                self.handPos = self.handPos % 720
-
-        def getMinsPast12(self):
-                return self.handPos
-        
-        
 class Clock:
         handPos = FaceTime()
         handDriver = ClockHands()
