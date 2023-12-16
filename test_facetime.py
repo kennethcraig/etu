@@ -24,17 +24,25 @@ class TestFacetime(unittest.TestCase):
     def test_advance(self):
         ft = FaceTime()
         ft.advance()
+        self.assertEqual(ft.handPos, 0.5)
+        ft.advance()
         self.assertEqual(ft.handPos, 1)
+        ft.advance()
+        self.assertEqual(ft.handPos, 1.5)
         ft.advance()
         self.assertEqual(ft.handPos, 2)
 
 
     def test_advanceWrap(self):
-        ft = FaceTime(718)
+        ft = FaceTime(718.5)
         ft.advance()
         self.assertEqual(ft.handPos, 719)
         ft.advance()
+        self.assertEqual(ft.handPos, 719.5)
+        ft.advance()
         self.assertEqual(ft.handPos, 0)
+        ft.advance()
+        self.assertEqual(ft.handPos, 0.5)
         ft.advance()
         self.assertEqual(ft.handPos, 1)
 
@@ -51,6 +59,18 @@ class TestFacetime(unittest.TestCase):
         ft = FaceTime.fromTime(time(14, 0, 0))
         self.assertEqual(ft.handPos, 120)
 
+        ft = FaceTime.fromTime(time(14, 0, 29))
+        self.assertEqual(ft.handPos, 120)
+
+        ft = FaceTime.fromTime(time(14, 0, 30))
+        self.assertEqual(ft.handPos, 120.5)
+                
+        ft = FaceTime.fromTime(time(14, 0, 31))
+        self.assertEqual(ft.handPos, 120.5)
+
+        ft = FaceTime.fromTime(time(14, 0, 59))
+        self.assertEqual(ft.handPos, 120.5)
+
 
     def test_accessor(self):
         ft = FaceTime(123)
@@ -58,12 +78,12 @@ class TestFacetime(unittest.TestCase):
 
 
     def test_add(self):
-        a = FaceTime(30)
-        b = FaceTime(60)
+        a = FaceTime(30.5)
+        b = FaceTime(60.5)
         c = FaceTime(718)
 
-        self.assertEqual((a + b).getHandPos(), 90)
-        self.assertEqual((a + c).getHandPos(), 28)
+        self.assertEqual((a + b).getHandPos(), 91)
+        self.assertEqual((a + c).getHandPos(), 28.5)
         
 
     def test_sub(self):
@@ -71,5 +91,5 @@ class TestFacetime(unittest.TestCase):
         b = FaceTime(20)
         c = FaceTime(719)
 
-        self.assertEqual((a - b).getHandPos(), 10)
-        self.assertEqual((b - a).getHandPos(), -10)
+        self.assertEqual((a - b), 10)
+        self.assertEqual((b - a), -10)

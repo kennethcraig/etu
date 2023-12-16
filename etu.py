@@ -101,7 +101,7 @@ class Clock:
         def load(self):
                 try:
                         with open("time.txt", "rt") as fp:
-                                self.handPos = FaceTime(int(fp.read()))
+                                self.handPos = FaceTime(float(fp.read()))
                         logging.info(f"Clock.load() - loaded clock with {self.handPos.getHandPos()}")
                 except Exception as e:
                         self.handPos = FaceTime(0)

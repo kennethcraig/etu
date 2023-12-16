@@ -6,9 +6,9 @@ import datetime
 
 class FaceTime:
     """Represents the 720 minute cycle of an analogue clock face"""
-    handPos = 0
+    handPos = 0.0
 
-    def __init__(self, minsPast12 : int = 0):
+    def __init__(self, minsPast12 : float = 0):
         """Constructor
 
         Args:
@@ -26,13 +26,14 @@ class FaceTime:
             FaceTime: The newly constructed FaceTime
         """
         pos = (set.hour % 12) * 60 + set.minute
+        pos += 0.5 if set.second >= 30 else 0.0
         return FaceTime(pos)
 
     def advance(self):
         """Advances the clock 1 minute
         """
-        self.handPos = self.handPos + 1
-        self.handPos = self.handPos % 720
+        self.handPos = self.handPos + 0.5
+        self.handPos = self.handPos % 720.0
 
     def getHandPos(self) -> int:
         """Returns the position of the clock in minutes past 12:00
