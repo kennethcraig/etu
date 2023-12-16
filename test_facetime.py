@@ -72,4 +72,4 @@ class TestFacetime(unittest.TestCase):
         c = FaceTime(719)
 
         self.assertEqual((a - b).getHandPos(), 10)
-        self.assertEqual((b - a).getHandPos(), 710)
+        self.assertEqual((b - a).getHandPos(), -10)

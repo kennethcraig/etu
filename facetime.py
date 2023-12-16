@@ -53,13 +53,28 @@ class FaceTime:
         """
         return FaceTime(self.handPos + rhs.handPos)
 
-    def __sub__(self, rhs : FaceTime)-> FaceTime:
+    def __sub__(self, rhs : FaceTime) -> int:
         """Subtracts two FaceTime objects
 
         Args:
             rhs (FaceTime): The FaceTime object to subtract from this one
 
         Returns:
-            FaceTime: The result of the subtraction
+            int: The result of the subtraction in minutes (signed)
         """
-        return FaceTime((self.handPos - rhs.handPos) + 720)
+        return self.handPos - rhs.handPos
+    
+    def __eq__(self, rhs) -> bool:
+        return self.handPos == rhs.handPos
+    
+    def __ne__(self, rhs) -> bool:
+        return self.handPos != rhs.handPos
+    
+    def __lt__(self, rhs):
+        return self.handPos < rhs.handPos
+    
+    def __gt__(self, rhs):
+        return self.handPos > rhs.handPos
+    
+    def __repr__(self) -> str:
+        return f"FaceTime({self.handPos})"
